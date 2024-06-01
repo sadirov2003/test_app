@@ -17,8 +17,6 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
   }
 
   FutureOr<void> newsInitialEvent(NewsInitialEvent event, Emitter<NewsState> emit) async {
-    List<Article> featuredNews = [];
-    List<Article> latestNews = [];
     emit(NewsLoadingState());
     //await Future.delayed(const Duration(seconds: 5));
     featuredNews = await newsRepository.getFeaturedArticles();
