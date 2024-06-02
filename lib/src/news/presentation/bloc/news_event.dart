@@ -11,3 +11,12 @@ class NewsButtonNavigateEvent extends NewsEvent {
     required this.clickedArticleModel,
   });
 }
+
+class NewsResetEvent extends NewsEvent {
+  final Article? articleModel;
+  bool clickedMakeAll;
+  NewsResetEvent({
+    this.articleModel,
+    this.clickedMakeAll = false,
+  });
+}

@@ -34,26 +34,20 @@ class _NewsPageState extends State<NewsPage> {
           onPressed: () {},
           icon: const Icon(CustomIcons.arrow_back, color: Color(0xFF000000)),
         ),
-        title: const Text(
+        title: Text(
           'Notifications',
-          style: TextStyle(
-            color: Color(0xFF000000),
-            fontWeight: FontWeight.w400,
-            fontSize: 18,
-          ),
+          style: Theme.of(context).textTheme.titleMedium!.copyWith(fontSize: 18),
         ),
         centerTitle: true,
         actions: [
           TextButton(
-            child: const Text(
+            child: Text(
               'Mark all read',
-              style: TextStyle(
-                color: Color(0xFF000000),
-                fontWeight: FontWeight.w400,
-                fontSize: 18,
-              ),
+              style: Theme.of(context).textTheme.titleMedium!.copyWith(fontSize: 18),
             ),
-            onPressed: () {},
+            onPressed: () {
+              newsBloc.add(NewsResetEvent(clickedMakeAll: true));
+            },
           ),
           const SizedBox(width: 10),
         ],
@@ -62,9 +56,14 @@ class _NewsPageState extends State<NewsPage> {
         bloc: newsBloc,
         listenWhen: (previous, current) => current is NewsActionState,
         buildWhen: (previous, current) => current is! NewsActionState,
-        listener: (context, state){
-          if(state is NewsNavigateToDetailedPageActionState){
-            Navigator.push(context, MaterialPageRoute(builder: ((context) => NewsDetailedPage(model: state.articleModel))));
+        listener: (context, state) async {
+          if (state is NewsNavigateToDetailedPageActionState) {
+            await Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: ((context) =>
+                        NewsDetailedPage(model: state.articleModel))));
+            newsBloc.add(NewsResetEvent(articleModel: state.articleModel));
           }
         },
         builder: (context, state) {
@@ -79,32 +78,26 @@ class _NewsPageState extends State<NewsPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.only(left: 28, top: 20),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 28, top: 20),
                       child: Text(
                         'Featured',
-                        style: TextStyle(
-                          color: Color(0xFF000000),
-                          fontWeight: FontWeight.w500,
-                          fontSize: 20,
-                        ),
+                        style: Theme.of(context).textTheme.titleMedium!.copyWith(fontSize: 20, fontWeight: FontWeight.w500),
                       ),
                     ),
                     const SizedBox(height: 20),
-                    FeaturedNews(data: successState.featuredData, newsBloc: newsBloc),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 28, top: 20),
+                    FeaturedNews(
+                        data: successState.featuredData, newsBloc: newsBloc),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 28, top: 20),
                       child: Text(
                         'Latest news',
-                        style: TextStyle(
-                          color: Color(0xFF000000),
-                          fontWeight: FontWeight.w500,
-                          fontSize: 20,
-                        ),
+                        style: Theme.of(context).textTheme.titleMedium!.copyWith(fontSize: 20, fontWeight: FontWeight.w500),
                       ),
                     ),
                     const SizedBox(height: 20),
-                    LatestNews(data: successState.latestData, newsBloc: newsBloc),
+                    LatestNews(
+                        data: successState.latestData, newsBloc: newsBloc),
                   ],
                 ),
               );

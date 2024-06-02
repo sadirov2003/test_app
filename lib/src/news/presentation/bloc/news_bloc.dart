@@ -14,9 +14,11 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
   NewsBloc() : super(NewsInitial()) {
     on<NewsInitialEvent>(newsInitialEvent);
     on<NewsButtonNavigateEvent>(newsButtonNavigateEvent);
+    on<NewsResetEvent>(newsResetEvent);
   }
 
-  FutureOr<void> newsInitialEvent(NewsInitialEvent event, Emitter<NewsState> emit) async {
+  FutureOr<void> newsInitialEvent(
+      NewsInitialEvent event, Emitter<NewsState> emit) async {
     emit(NewsLoadingState());
     //await Future.delayed(const Duration(seconds: 5));
     featuredNews = await newsRepository.getFeaturedArticles();
@@ -26,8 +28,31 @@ class NewsBloc extends Bloc<NewsEvent, NewsState> {
     );
   }
 
-  FutureOr<void> newsButtonNavigateEvent(NewsButtonNavigateEvent event, Emitter<NewsState> emit) {
-    
-    emit(NewsNavigateToDetailedPageActionState(articleModel: event.clickedArticleModel));
+  FutureOr<void> newsButtonNavigateEvent(
+      NewsButtonNavigateEvent event, Emitter<NewsState> emit) {
+    emit(NewsNavigateToDetailedPageActionState(
+        articleModel: event.clickedArticleModel));
+  }
+
+  FutureOr<void> newsResetEvent(
+      NewsResetEvent event, Emitter<NewsState> emit) async {
+    if (event.clickedMakeAll) {
+      for (var news in latestNews) {
+        news.readed = true;
+      }
+    } else {
+      for (var news in latestNews) {
+        if (news.id == event.articleModel!.id) {
+          if (news.readed == false) {
+            news.readed = true;
+          }
+        }
+      }
+    }
+
+    emit(NewsLoadingState());
+    emit(
+      NewsLoadedState(featuredData: featuredNews, latestData: latestNews),
+    );
   }
 }

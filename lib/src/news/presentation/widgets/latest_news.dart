@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_news_app/core/res/colors.dart';
 
 import '../../data/models/article.dart';
 import '../bloc/news_bloc.dart';
@@ -15,6 +16,9 @@ class LatestNews extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
+
+
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -24,58 +28,64 @@ class LatestNews extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(left: 28, right: 28, bottom: 20),
           child: GestureDetector(
-            onTap: (){
+            onTap: () {
               newsBloc.add(NewsButtonNavigateEvent(clickedArticleModel: model));
             },
-            child: Container(
-              width: MediaQuery.sizeOf(context).width,
-              height: 103,
-              decoration: BoxDecoration(
-                
-                color: model.readed ? Color(0xFFF5F5F5) : Color(0xFFFFFFFF),
-                borderRadius: BorderRadius.circular(9),
-              ),
-              child: Center(
-                child: Row(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.network(
-                        model.imageUrl,
-                        width: 90,
-                        height: 60,
-                        fit: BoxFit.cover,
+            child: Material(
+              elevation: 10,
+              shadowColor: Colors.black38,
+              borderRadius: BorderRadius.circular(9),
+              child: Container(
+                width: MediaQuery.sizeOf(context).width,
+                height: 103,
+                decoration: BoxDecoration(
+                  color: model.readed
+                      ? ColorsUI.darkColorLatestNewsContainer
+                      : ColorsUI.whiteColor,
+                  borderRadius: BorderRadius.circular(9),
+                ),
+                child: Center(
+                  child: Row(
+                    //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      const SizedBox(width: 20),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.network(
+                          model.imageUrl,
+                          width: 90,
+                          height: 60,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 23),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          height: 46,
-                          width: 190,
-                          child: Text(
-                            model.title,
-                            maxLines: 2,
-                            style: const TextStyle(
-                              color: Color(0xFF000000),
-                              fontWeight: FontWeight.w400,
-                              fontSize: 16,
+                      const SizedBox(width: 20),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            height: 46,
+                            width: (MediaQuery.sizeOf(context).width) - 221,
+                            child: Text(
+                              model.title,
+                              maxLines: 2,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium!
+                                  .copyWith(fontSize: 16),
                             ),
                           ),
-                        ),
-                        Text(
-                          '1 day ago',
-                          style: const TextStyle(
-                            color: Color(0xFF9A9A9A),
-                            fontWeight: FontWeight.w400,
-                            fontSize: 12,
+                          Text(
+                            timePublished(model.publicationDate.toString()),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(fontSize: 12, color: ColorsUI.publishedTimeColor),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

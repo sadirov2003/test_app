@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_news_app/core/res/colors.dart';
 import 'package:flutter_news_app/src/news/presentation/bloc/news_bloc.dart';
 import 'package:flutter_news_app/src/news/presentation/bloc/news_event.dart';
 
@@ -63,11 +64,7 @@ class FeaturedNews extends StatelessWidget {
                       width: 270,
                       child: Text(
                         model.title,
-                        style: const TextStyle(
-                          color: Color(0xFFFFFFFF),
-                          fontWeight: FontWeight.w400,
-                          fontSize: 28,
-                        ),
+                        style: Theme.of(context).textTheme.titleMedium!.copyWith(fontSize: 28, color: ColorsUI.whiteColor),
                       ),
                     ),
                   ),
